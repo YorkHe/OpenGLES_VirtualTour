@@ -12,6 +12,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/ext.hpp>
 
+#include <SOIL/SOIL.h>
+
 #define MOVE_PRESS 0
 #define MOVE_RELEASE 1
 
@@ -103,6 +105,10 @@ Java_com_york42_esvirtualtour_CustomRenderer_nativeInit(JNIEnv *env, jclass type
     glBindVertexArray(0);
 
     LOGI(1, "BUFFER ATTRIB CREATED");
+
+    int width, height;
+    unsigned char* image = SOIL_load_image("image.png", &width, &height, 0, SOIL_LOAD_RGB);
+
 }
 
 JNIEXPORT void JNICALL
