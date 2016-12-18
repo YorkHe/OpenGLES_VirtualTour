@@ -3,9 +3,16 @@
 //
 
 #include <jni.h>
+#include <cstdio>
+
+#include <android/native_activity.h>
+#include <linux/fs.h>
+#include <fcntl.h>
+#include <errno.h>
 
 #include "Shader.h"
 #include "Camera.h"
+#include "Model.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -21,63 +28,17 @@ Shader* shader;
 Camera camera;
 GLuint VBO;
 GLuint VAO;
+GLuint EBO;
+GLuint texture;
 
 glm::mat4 projection;
 glm::mat4 view;
 glm::mat4 model;
 
+Model* statue;
+
 double angle;
 long lastTime = 0;
-
-GLfloat VERTEX[] = {
-        -1.0f,-1.0f,-1.0f, // triangle 1 : begin
-        -1.0f,-1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f, // triangle 1 : end
-
-        1.0f, 1.0f,-1.0f, // triangle 2 : begin
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f, // triangle 2 : end
-
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-
-        1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-
-        -1.0f, 1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f,
-
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f
-};
 
 extern "C"{
 JNIEXPORT void JNICALL
@@ -91,23 +52,9 @@ Java_com_york42_esvirtualtour_CustomRenderer_nativeInit(JNIEnv *env, jclass type
     env->ReleaseStringUTFChars(fragmentShaderSource, fragmentShaderCode);
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-    LOGI(1, "SHADER CREATED");
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    glEnable(GL_DEPTH_TEST);
 
-    LOGI(1, "BUFFER CREATED");
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(VERTEX), VERTEX, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-    glEnableVertexAttribArray(0);
-    glBindVertexArray(0);
-
-    LOGI(1, "BUFFER ATTRIB CREATED");
-
-    int width, height;
-    unsigned char* image = SOIL_load_image("image.png", &width, &height, 0, SOIL_LOAD_RGB);
+    statue = new Model("/sdcard/opengles/libertyStatue/LibertStatue.obj");
 
 }
 
@@ -126,6 +73,7 @@ Java_com_york42_esvirtualtour_CustomRenderer_nativeDraw(JNIEnv *env, jclass type
 
     camera.doMovement(deltaTime);
 
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     shader->use();
 
@@ -140,9 +88,12 @@ Java_com_york42_esvirtualtour_CustomRenderer_nativeDraw(JNIEnv *env, jclass type
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
-    glBindVertexArray(0);
+
+//    glBindVertexArray(VAO);
+//    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//    glBindVertexArray(0);
+
+    statue->Draw(*shader);
 }
 
 JNIEXPORT void JNICALL
