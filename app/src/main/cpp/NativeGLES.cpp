@@ -25,6 +25,7 @@
 #define MOVE_RELEASE 1
 
 Shader* shader;
+Shader* lightShader;
 Camera camera;
 GLuint VBO;
 GLuint VAO;
@@ -34,6 +35,8 @@ GLuint texture;
 glm::mat4 projection;
 glm::mat4 view;
 glm::mat4 model;
+
+glm::vec3 lightPos(0.0f, 10.0f, 0.0f);
 
 Model* statue;
 
@@ -103,6 +106,7 @@ Java_com_york42_esvirtualtour_CustomRenderer_nativeInit(JNIEnv *env, jclass type
 {
     LOGI(1, "NATIVE LOADED");
     shader = new Shader("/sdcard/opengles/vshader.glsl", "/sdcard/opengles/fshader.glsl");
+    lightShader = new Shader("/sdcard/opengles/vshader.glsl", "/sdcard/opengles/light_fshader.glsl");
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
     glEnable(GL_DEPTH_TEST);
@@ -165,8 +169,7 @@ Java_com_york42_esvirtualtour_CustomRenderer_nativeDraw(JNIEnv *env, jclass type
     angle += 0.001;
 
     model = glm::mat4(1.0f);
-//    model = glm::rotate(model, angleX, glm::vec3(1,0,0));
-//    model = glm::rotate(model, angleY, glm::vec3(0,1,0));
+
     view = camera.GetViewMatrix();
 
     glUniform3f(glGetUniformLocation(shader->getProgram(), "viewPos"), camera.Position.x, camera.Position.y, camera.Position.z);
@@ -175,17 +178,36 @@ Java_com_york42_esvirtualtour_CustomRenderer_nativeDraw(JNIEnv *env, jclass type
     glUniform3f(glGetUniformLocation(shader->getProgram(), "dirLight.diffuse"), 0.4f, 0.4f, 0.4f);
     glUniform3f(glGetUniformLocation(shader->getProgram(), "dirLight.specular"), 0.5f, 0.5f, 0.5f);
 
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "pointLight.position"),  lightPos.x, lightPos.y, lightPos.z);
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "pointLight.ambient"),   0.2f, 0.2f, 0.2f);
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "pointLight.diffuse"),   0.5f, 0.5f, 0.5f);
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "pointLight.specular"),  1.0f, 1.0f, 1.0f);
+    glUniform1f(glGetUniformLocation(shader->getProgram(), "pointLight.constant"),  1.0f);
+    glUniform1f(glGetUniformLocation(shader->getProgram(), "pointLight.linear"),    0.09);
+    glUniform1f(glGetUniformLocation(shader->getProgram(), "pointLight.quadratic"), 0.032);
+
 
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-
-//    glBindVertexArray(VAO);
-//    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-//    glBindVertexArray(0);
-
     statue->Draw(*shader);
+
+    lightShader->use();
+    model = glm::mat4(1.0f);
+    model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+    model = glm::translate(model, lightPos);
+
+    glUniformMatrix4fv(glGetUniformLocation(lightShader->getProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(lightShader->getProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(lightShader->getProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+    glBindVertexArray(lightVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+
+
+
 }
 
 JNIEXPORT void JNICALL

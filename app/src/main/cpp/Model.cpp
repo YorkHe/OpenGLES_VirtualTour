@@ -38,7 +38,7 @@ void Model::loadModel(string path) {
 
 void Model::processNode(aiNode *node, const aiScene *scene) {
 
-    LOGI(1, "mNumMeshes : %d, mNumChildren: %d ", node->mNumMeshes, node->mNumChildren);
+//    LOGI(1, "mNumMeshes : %d, mNumChildren: %d ", node->mNumMeshes, node->mNumChildren);
 
     for (GLuint i = 0; i<node->mNumMeshes; i++)
     {
@@ -57,7 +57,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     vector<GLuint> indices;
     vector<Texture> textures;
 
-    LOGI(1, "%d %d %d", mesh->mNumVertices, mesh->mNumFaces, mesh->mMaterialIndex);
+//    LOGI(1, "%d %d %d", mesh->mNumVertices, mesh->mNumFaces, mesh->mMaterialIndex);
 
     for (GLuint i = 0; i < mesh->mNumVertices; i++)
     {
@@ -88,7 +88,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         vertices.push_back(vertex);
     }
 
-    LOGI(1, "Finish Vertices");
+//    LOGI(1, "Finish Vertices");
 
     for (GLuint i = 0; i < mesh->mNumFaces; i++)
     {
@@ -96,7 +96,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         for(GLuint j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
-    LOGI(1, "Finish Faces");
+//    LOGI(1, "Finish Faces");
 
     if (mesh->mMaterialIndex >= 0)
     {
@@ -107,7 +107,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
 
-    LOGI(1, "Finish Material");
+//    LOGI(1, "Finish Material");
 
     return Mesh(vertices, indices, textures);
 }

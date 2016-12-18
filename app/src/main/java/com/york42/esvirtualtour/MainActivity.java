@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton right;
     private ImageButton up;
     private ImageButton down;
+
+    private Button pointLight;
+    private Button dirLight;
     private CustomSurfaceView mCustomSurfaceView;
     private FrameLayout mFrameLayout;
 
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(mCustomSurfaceView);
 
         View view = LayoutInflater.from(this).inflate(R.layout.buttons, null);
+        View lightView = LayoutInflater.from(this).inflate(R.layout.lights, null);
 
         getSupportActionBar().hide();
 
@@ -56,7 +61,25 @@ public class MainActivity extends AppCompatActivity {
         up.setOnTouchListener(new OnclickListenerFactory(Camera_Movement.FORWARD.ordinal()));
         down.setOnTouchListener(new OnclickListenerFactory(Camera_Movement.BACKWARD.ordinal()));
 
+        pointLight  = (Button)lightView.findViewById(R.id.pointLight);
+        dirLight = (Button)lightView.findViewById(R.id.dirLight);
+
+        pointLight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        dirLight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         addContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        addContentView(lightView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
     }
 
