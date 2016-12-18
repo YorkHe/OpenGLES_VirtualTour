@@ -51,7 +51,7 @@ GLuint Shader::compileShader(GLenum type, const char *shaderCode) {
     {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
         LOGI(1, "ERROR::SHADER::COMPILE_FAILED\n");
-        LOGI(1, "%s", infoLog);
+        LOGI(1, "infoLog: %s", infoLog);
         glDeleteShader(shader);
         return 0;
     }

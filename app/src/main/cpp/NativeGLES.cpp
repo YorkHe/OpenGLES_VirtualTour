@@ -84,6 +84,13 @@ Java_com_york42_esvirtualtour_CustomRenderer_nativeDraw(JNIEnv *env, jclass type
 //    model = glm::rotate(model, angleY, glm::vec3(0,1,0));
     view = camera.GetViewMatrix();
 
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "viewPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "dirLight.direction"), -0.2f, -1.0f, -0.3f);
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "dirLight.ambient"), 0.3f, 0.3f, 0.3f);
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "dirLight.diffuse"), 0.4f, 0.4f, 0.4f);
+    glUniform3f(glGetUniformLocation(shader->getProgram(), "dirLight.specular"), 0.5f, 0.5f, 0.5f);
+
+
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgram(), "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgram(), "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shader->getProgram(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
