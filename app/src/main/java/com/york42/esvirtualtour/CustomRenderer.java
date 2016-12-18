@@ -35,10 +35,7 @@ public class CustomRenderer implements GLSurfaceView.Renderer{
 
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-        String vertexShaderSource = LoadShader(mContext, R.raw.vshader);
-        String fragmentShaderSource = LoadShader(mContext, R.raw.fshader);
-        nativeInit(vertexShaderSource, fragmentShaderSource);
-
+        nativeInit();
     }
 
     @Override
@@ -86,7 +83,7 @@ public class CustomRenderer implements GLSurfaceView.Renderer{
         System.loadLibrary("NativeGLES");
     }
 
-    public static native void nativeInit(String vertexShaderSource, String fragmentShaderSource);
+    public static native void nativeInit();
     private static native void nativeDraw(long time);
     private static native void nativeSurfaceChanged(int width, int height);
     private static native void nativeDirectionCallback(int direction, int evt);
