@@ -11,7 +11,7 @@ import android.view.SurfaceView;
  */
 
 public class CustomSurfaceView extends GLSurfaceView{
-    private CustomRenderer mRenderer;
+    public CustomRenderer mRenderer;
     private float mPreviousX;
     private float mPreviousY;
     private final float TOUCH_SCALE_FACTOR = 0.0001f;

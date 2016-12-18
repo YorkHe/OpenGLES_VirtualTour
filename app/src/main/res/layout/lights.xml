@@ -23,5 +23,22 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/pointLight"/>
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="纳米服"
+        android:id="@+id/nanosuit"
+        android:layout_above="@+id/pointLight"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="雕像"
+        android:id="@+id/statue"
+        android:layout_above="@+id/dirLight"
+        android:layout_alignStart="@+id/dirLight"/>
+
 </RelativeLayout>
 

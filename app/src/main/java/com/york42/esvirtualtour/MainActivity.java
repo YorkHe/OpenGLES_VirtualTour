@@ -1,9 +1,7 @@
 package com.york42.esvirtualtour;
 
-import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
 
     private Button pointLight;
     private Button dirLight;
+    private Button nanosuit;
+    private Button statue;
+
     private CustomSurfaceView mCustomSurfaceView;
     private FrameLayout mFrameLayout;
 
@@ -63,18 +62,39 @@ public class MainActivity extends AppCompatActivity {
 
         pointLight  = (Button)lightView.findViewById(R.id.pointLight);
         dirLight = (Button)lightView.findViewById(R.id.dirLight);
+        nanosuit = (Button)lightView.findViewById(R.id.nanosuit);
+        statue = (Button)lightView.findViewById(R.id.statue);
+
 
         pointLight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                PointLightDialog lightDialog = new PointLightDialog();
+                lightDialog.show(getSupportFragmentManager(), "pointLight");
             }
         });
 
         dirLight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DirLightDialog lightDialog = new DirLightDialog();
+                lightDialog.show(getSupportFragmentManager(), "dirLight");
+            }
+        });
 
+        nanosuit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NanoDialog nanoDialog = new NanoDialog();
+                nanoDialog.show(getSupportFragmentManager(), "nanosuit");
+            }
+        });
+
+        statue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StatueDialog statueDialog = new StatueDialog();
+                statueDialog.show(getSupportFragmentManager(), "statue");
             }
         });
 
